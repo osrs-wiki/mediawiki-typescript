@@ -12,4 +12,3 @@ export * from "./MediaWikiTable";
 export * from "./MediaWikiTemplate";
 export * from "./MediaWikiText";
 export * from "./MediaWikiTOC";
-export * from "./MediaWikiVideo";

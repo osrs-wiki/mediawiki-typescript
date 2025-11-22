@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`MediaWikiTemplate it should render collapsed with 4 or more params and collapsed option 1`] = `
 "{{test|one=one|two=two|three=three|four=four}}

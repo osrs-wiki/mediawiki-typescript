@@ -5,7 +5,7 @@
  * @returns
  */
 export const toKeyValueString = <T>(options: T) => {
-  return Object.keys(options).reduce(
+  return Object.keys(options as object).reduce(
     (total, key) =>
       `${total ? total + " " : ""}${key}="${options?.[key as keyof T]}"`,
     ""
