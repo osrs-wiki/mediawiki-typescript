@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# Coverage and test outputs
+coverage/
+.nyc_output/
+
+# Turbo
+.turbo/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.vitepress/cache/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Generated files
+CHANGELOG.md
+*.generated.*
+
+# Documentation build outputs
+.docusaurus/
+.vuepress/dist/
+
+# Misc
+.DS_Store
+*.tgz
