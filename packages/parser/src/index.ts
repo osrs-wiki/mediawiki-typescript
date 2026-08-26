@@ -54,6 +54,7 @@ const toCellOptions = (
   if (attributes?.style) options.style = attributes.style;
   if (attributes?.colspan) options.colspan = Number(attributes.colspan);
   if (attributes?.rowspan) options.rowspan = Number(attributes.rowspan);
+  if (attributes?.scope === "row" || attributes?.scope === "col") options.scope = attributes.scope;
   if (cell.header) options.header = true;
   return Object.keys(options).length > 0 ? options : undefined;
 };
@@ -94,6 +95,7 @@ const blockToContent = (block: Block): MediaWikiContent[] => {
       return [
         new MediaWikiTable({
           caption: table.caption,
+          captionOptions: toTableOptions(table.captionAttributes),
           options: toTableOptions(table.attributes),
           rows: table.rows.map(toTableRow),
         }),

@@ -359,4 +359,39 @@ describe("MediaWikiTable", () => {
     });
     expect(table.build()).toMatchSnapshot();
   });
+
+  test("caption with attributes", () => {
+    const table = new MediaWikiTable({
+      caption: "Food complements",
+      captionOptions: { style: "caption-side:bottom" },
+      rows: [{ cells: [{ content: [new MediaWikiText("Orange")] }] }],
+    });
+    expect(table.build()).toContain(
+      '|+ style="caption-side:bottom" | Food complements\n'
+    );
+  });
+
+  test("caption without attributes stays in the simple form", () => {
+    const table = new MediaWikiTable({
+      caption: "Food complements",
+      rows: [{ cells: [{ content: [new MediaWikiText("Orange")] }] }],
+    });
+    expect(table.build()).toContain("|+Food complements\n");
+  });
+
+  test("cell with a scope attribute", () => {
+    const table = new MediaWikiTable({
+      rows: [
+        {
+          cells: [
+            {
+              content: [new MediaWikiText("Item")],
+              options: { header: true, scope: "col" },
+            },
+          ],
+        },
+      ],
+    });
+    expect(table.build()).toContain('scope="col"');
+  });
 });

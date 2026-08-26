@@ -33,6 +33,9 @@ export const parseTableBlock = (raw: string): ParsedTable => {
   const table: ParsedTable = { attributes, rows: [] };
   let currentRow: ParsedTableRow | undefined;
   let currentCell: ParsedTableCell | undefined;
+  // True right after a cell is started by a bare marker with nothing else on that line (e.g. a
+  // lone "|"), so the *next* line is the "attrs | content" line rather than a plain continuation.
+  let cellAwaitingFirstLine = false;
 
   const flushRow = () => {
     if (currentRow) {
@@ -40,6 +43,7 @@ export const parseTableBlock = (raw: string): ParsedTable => {
     }
     currentRow = undefined;
     currentCell = undefined;
+    cellAwaitingFirstLine = false;
   };
 
   const addCells = (line: string, marker: "!" | "|", header: boolean) => {
@@ -52,6 +56,7 @@ export const parseTableBlock = (raw: string): ParsedTable => {
       const { attributes: cellAttributes, content } = splitAttributesAndContent(segment);
       currentCell = { attributes: cellAttributes, header, content };
       currentRow?.cells.push(currentCell);
+      cellAwaitingFirstLine = !cellAttributes && content === "";
     });
   };
 
@@ -62,6 +67,7 @@ export const parseTableBlock = (raw: string): ParsedTable => {
       );
       table.caption = content;
       table.captionAttributes = captionAttributes;
+      cellAwaitingFirstLine = false;
       continue;
     }
     if (line.startsWith("|-")) {
@@ -78,7 +84,15 @@ export const parseTableBlock = (raw: string): ParsedTable => {
       continue;
     }
     if (currentCell) {
-      currentCell.content = `${currentCell.content}\n${line}`;
+      if (cellAwaitingFirstLine) {
+        // The marker line was bare (e.g. a lone "|"); this line is that cell's "attrs | content".
+        const { attributes: cellAttributes, content } = splitAttributesAndContent(line);
+        currentCell.attributes = cellAttributes;
+        currentCell.content = content;
+        cellAwaitingFirstLine = false;
+      } else {
+        currentCell.content = `${currentCell.content}\n${line}`;
+      }
     }
   }
   flushRow();
