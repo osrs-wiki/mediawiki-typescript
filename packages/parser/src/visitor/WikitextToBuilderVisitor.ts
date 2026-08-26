@@ -7,6 +7,7 @@ import { parseAttributes } from "../attributes";
 import { BARE_PARSER_FUNCTION_NAMES } from "../constants";
 import { wikitextParser } from "../parser/parserInstance";
 import {
+  MediaWikiCategory,
   MediaWikiComment,
   MediaWikiExternalLink,
   MediaWikiFile,
@@ -105,6 +106,15 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
       return {
         kind: "content",
         value: new MediaWikiFile(fileName, parseFileOptions(rest)),
+      };
+    }
+    // A leading ":" (e.g. "[[:Category:Help]]") is a plain link to the category page, not a
+    // category tag — only a bare "Category:" target adds the current page to that category.
+    if (/^category:/i.test(target)) {
+      const categoryName = target.replace(/^category:/i, "");
+      return {
+        kind: "content",
+        value: new MediaWikiCategory(categoryName, rest[0]),
       };
     }
     const label = rest.length > 0 ? rest[rest.length - 1] : undefined;

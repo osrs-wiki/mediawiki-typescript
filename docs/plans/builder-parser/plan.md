@@ -79,11 +79,34 @@ Use the **Completion Checklist** at the top to track progress across sessions. D
 - [x] `packages/parser/src/__tests__/fileOptions.test.ts` — full parse+rebuild round trip per option (36 tests), incl. `Image:` namespace alias and an all-options-combined case
 - [x] Full monorepo `build`/`lint`/`test` green; parser package coverage 99.03% statements / 99.48% lines (116/116 tests)
 
+### Part 2E — Full Help:Tables coverage (builder + parser) (DONE)
+- [x] `MediaWikiTable.types.ts`/`MediaWikiTable.ts` (builder): added `captionOptions?: {class?, style?}` — the builder previously had no way to produce `|+ style="..." | caption` at all (only the bare `|+caption` form); added `scope?: "row" | "col"` to `MediaWikiTableCellOptions` for header-cell accessibility (Help:Tables#Accessibility of table header cells)
+- [x] Parser: wired `captionOptions`/`scope` end-to-end (`parseTable.ts` already captured `captionAttributes`, now actually consumed by `src/index.ts`)
+- [x] Parser bug fix: a cell started by a bare marker alone on its own line (e.g. a lone `|`) followed by an "attrs | content" line — the exact pattern in Help:Tables' own "noresize" example (`|` then `rowspan="2" |Areally...`) — was previously swallowed as literal text instead of being split into attributes+content. Fixed via a `cellAwaitingFirstLine` flag in `parseTable.ts` that applies `splitAttributesAndContent` to exactly the first continuation line after a bare marker, while later continuation lines still append as plain multi-line content (no regression to the existing multi-line-cell test)
+- [x] Verified (and added a test asserting) MediaWiki's own documented "negative number" caveat: a bare `|-6` cell is parsed as a row separator (`|-`) + stray `6`, not as content — this is real MediaWiki's actual documented behavior, correctly replicated rather than "fixed"
+- [x] Confirmed out of scope, matching upstream MediaWiki itself: `<col>`/`<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` have no wikitext table syntax at all per Help:Tables ("Common attributes for columns, column groups and row groups"); legacy HTML4 table attributes (`cellpadding`, `cellspacing`, `border=`, `width=`) are called out by the page itself as "invalid in HTML5" — covered via the already-fully-supported `style` string instead of adding first-class fields for deprecated attributes
+- [x] `packages/builder/.../MediaWikiTable.test.ts` — added caption-with-attributes, caption-without-attributes, and cell-`scope` tests
+- [x] `packages/parser/src/__tests__/tables.test.ts` — 17 new tests covering minimal syntax, `||`/`!!` same-line cells, headers, captions (with/without attributes), `class="wikitable"`, `colspan`/`rowspan`, cell/row/header attributes (incl. on one line with `||`), `scope`, the noresize-style attrs-on-next-line pattern, plain multi-line cells, column width via cell `style`, the negative-number caveat, and an all-combined case
+- [x] Full monorepo `build`/`lint`/`test` green; parser package coverage 99.36% statements / 99.49% lines (133/133 tests)
+
+### Part 2F — Full Help:Categories coverage (builder + parser) (DONE)
+- [x] New builder content type `MediaWikiCategory` (`name`, optional `sortKey`) — `[[Category:Name]]`/`[[Category:Name|SortKey]]`; there was previously no dedicated category-tag type (a category tag would have round-tripped as a generic `MediaWikiLink`, losing its distinct semantic identity, mirroring why `MediaWikiFile` exists separately from `MediaWikiLink`)
+- [x] New builder content type `MediaWikiHiddenCategory` — `__HIDDENCAT__` magic word (Help:Categories#Hidden categories), mirroring the existing `MediaWikiTOC` pattern for `__TOC__`
+- [x] Parser: `link()` visitor now detects a bare `Category:` target (not `:Category:`, which is a plain link per Help:Categories and correctly falls through unchanged) and constructs `MediaWikiCategory` instead of `MediaWikiLink`, using the (single) extra pipe segment as the sort key
+- [x] Parser: `__HIDDENCAT__` recognized as its own block type in `splitBlocks.ts`/`src/index.ts`, same pattern as `__TOC__`/`#REDIRECT`
+- [x] `packages/builder/.../MediaWikiCategory.test.ts` and `.../MediaWikiHiddenCategory.test.ts` — new
+- [x] `packages/parser/src/__tests__/categories.test.ts` — 6 new tests: plain category tag, sort key, colon-prefixed category link (both with and without custom link text), multiple category tags on one page, hidden category magic word
+- [x] Added `MediaWikiCategory`/`MediaWikiHiddenCategory` to `roundTrip.test.ts`
+- [x] Full monorepo `build`/`lint`/`test` green; parser package coverage 99.37% statements / 99.5% lines (142/142 tests)
+
 ### Documented, intentionally out-of-scope gaps (see file for full rationale)
 - `MediaWikiBreak` (`build()` = bare `"\n"`) cannot be round-tripped — indistinguishable from ordinary whitespace once parsed back; real MediaWiki itself requires `<br/>` for a manual line break (Help:Formatting), so this is treated as a pre-existing quirk of the ported class, not something to silently "fix" without explicit approval.
 - `MediaWikiText.styling.underline` (`<u>...</u>`) round-trips to an equivalent `MediaWikiHTML("u", ...)` node instead of the exact original `MediaWikiText` type, since a generic `<u>` tag is indistinguishable from one MediaWiki's own class would produce.
 - Space-indented "preformatted text" blocks (Help:Formatting) have no corresponding builder content type, so parsing support was not added; the literal `<pre>` HTML tag (which does have a clear mapping) is already supported as an opaque tag.
+- Nested tables (a `{|`/`|}` inside a cell) are not supported by `parseTable.ts` (documented in its own doc comment).
+- `<col>`/`<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` and legacy HTML4 table attributes (`cellpadding`, `cellspacing`, `border=`, `width=`) — not modeled, matching either MediaWiki's own lack of support (former) or the page's own "invalid in HTML5" guidance to use `style` instead (latter).
 - Signatures (`~~~`/`~~~~`/`~~~~~`) are dynamic magic words with no meaningful static "build" representation; left as plain literal text, not modeled as a content type.
+- Category redirects, category trees (`<categorytree>`, `Extension:CategoryTree`), and tracking categories (Help:Categories) are extension/administrative features with no wikitext construct of their own beyond the plain `MediaWikiRedirect`/`MediaWikiCategory` tags already supported — nothing further to model.
 
 ---
 

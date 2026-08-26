@@ -1,11 +1,13 @@
 import { parse } from "../index";
 import {
   MediaWikiBreak,
+  MediaWikiCategory,
   MediaWikiComment,
   MediaWikiDate,
   MediaWikiExternalLink,
   MediaWikiFile,
   MediaWikiHeader,
+  MediaWikiHiddenCategory,
   MediaWikiHTML,
   MediaWikiLink,
   MediaWikiListItem,
@@ -60,6 +62,21 @@ describe("parse - round trip of existing builder content types", () => {
   test("MediaWikiRedirect", async () => {
     const result = await parse(new MediaWikiRedirect("Target page").build());
     expect(result).toEqual([new MediaWikiRedirect("Target page")]);
+  });
+
+  test("MediaWikiCategory", async () => {
+    const result = await parse(new MediaWikiCategory("Help").build());
+    expect(result).toEqual([new MediaWikiCategory("Help")]);
+  });
+
+  test("MediaWikiCategory (with sort key)", async () => {
+    const result = await parse(new MediaWikiCategory("Help", "Sort").build());
+    expect(result).toEqual([new MediaWikiCategory("Help", "Sort")]);
+  });
+
+  test("MediaWikiHiddenCategory", async () => {
+    const result = await parse(new MediaWikiHiddenCategory().build());
+    expect(result).toEqual([new MediaWikiHiddenCategory()]);
   });
 
   test("MediaWikiLink (no label)", async () => {

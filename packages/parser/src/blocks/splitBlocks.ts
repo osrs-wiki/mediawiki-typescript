@@ -5,6 +5,7 @@ export type ParagraphBlock = { type: "paragraph"; content: string };
 export type TableBlock = { type: "table"; content: string };
 export type TocBlock = { type: "toc" };
 export type RedirectBlock = { type: "redirect"; target: string };
+export type HiddenCategoryBlock = { type: "hiddencat" };
 
 export type Block =
   | HeadingBlock
@@ -13,7 +14,8 @@ export type Block =
   | ParagraphBlock
   | TableBlock
   | TocBlock
-  | RedirectBlock;
+  | RedirectBlock
+  | HiddenCategoryBlock;
 
 const HEADING_PATTERN = /^ {0,3}(={1,6})(.*?)\1\s*$/;
 const HORIZONTAL_RULE_PATTERN = /^-{4,}\s*$/;
@@ -21,6 +23,7 @@ const LIST_PATTERN = /^ {0,3}([*#;:]+)(.*)$/;
 const TABLE_START_PATTERN = /^ {0,3}\{\|/;
 const TABLE_END_PATTERN = /^ {0,3}\|\}/;
 const TOC_PATTERN = /^__TOC__$/;
+const HIDDEN_CATEGORY_PATTERN = /^__HIDDENCAT__$/;
 const REDIRECT_PATTERN = /^#REDIRECT\s*\[\[([^\]]+)\]\]/i;
 
 /**
@@ -74,6 +77,12 @@ export const splitBlocks = (text: string): Block[] => {
     if (TOC_PATTERN.test(line.trim())) {
       flushParagraph();
       blocks.push({ type: "toc" });
+      continue;
+    }
+
+    if (HIDDEN_CATEGORY_PATTERN.test(line.trim())) {
+      flushParagraph();
+      blocks.push({ type: "hiddencat" });
       continue;
     }
 

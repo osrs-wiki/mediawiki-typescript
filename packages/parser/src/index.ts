@@ -7,6 +7,7 @@ import { mergeDates, resolveQuotes, WikitextToBuilderVisitor, Piece } from "./vi
 import {
   MediaWikiContent,
   MediaWikiHeader,
+  MediaWikiHiddenCategory,
   MediaWikiListItem,
   MediaWikiRedirect,
   MediaWikiSeparator,
@@ -76,6 +77,8 @@ const blockToContent = (block: Block): MediaWikiContent[] => {
       return [new MediaWikiSeparator()];
     case "toc":
       return [new MediaWikiTOC()];
+    case "hiddencat":
+      return [new MediaWikiHiddenCategory()];
     case "redirect":
       return [new MediaWikiRedirect(block.target)];
     case "list": {
