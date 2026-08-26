@@ -50,14 +50,28 @@ const REDIRECT_PATTERN = /^#REDIRECT\s*\[\[([^\]]+)\]\]/i;
  * based on the leading characters of each physical line, mirroring MediaWiki's line-based block
  * passes (`doHeadings`, list handling, `doTableStuff`'s sibling `doBlockLevels`) — see Manual:Parser.
  *
- * Known limitation: since this operates on raw physical lines (not the preprocessor-expanded text),
- * a multi-line template/tag call whose inner lines happen to start with block markers (e.g. `*`)
- * may be mis-split. This is an accepted "best-effort" simplification, not a lossless implementation.
+ * Tracks `{{`/`}}` brace depth across lines so that a multi-line template invocation (e.g. a
+ * `|param = ...` value spanning several lines, some of which start with `*`) isn't mis-split by
+ * the line-based block markers below — those only apply once brace depth returns to zero.
+ *
+ * Known limitation: since this operates on raw physical lines (not the preprocessor-expanded text)
+ * using a naive brace count, edge cases like literal unbalanced braces inside `<nowiki>` are still
+ * an accepted "best-effort" simplification, not a lossless implementation.
  */
 export const splitBlocks = (text: string): Block[] => {
   const blocks: Block[] = [];
   const lines = text.split(/\r\n|\r|\n/);
   let paragraphLines: string[] = [];
+  let braceDepth = 0;
+
+  const applyBraceDelta = (s: string) => {
+    let delta = 0;
+    for (const ch of s) {
+      if (ch === "{") delta += 1;
+      else if (ch === "}") delta -= 1;
+    }
+    braceDepth = Math.max(0, braceDepth + delta);
+  };
 
   const flushParagraph = () => {
     if (paragraphLines.length > 0) {
@@ -71,6 +85,12 @@ export const splitBlocks = (text: string): Block[] => {
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
+
+    if (braceDepth > 0) {
+      paragraphLines.push(line);
+      applyBraceDelta(line);
+      continue;
+    }
 
     if (line.trim() === "") {
       flushParagraph();
@@ -89,6 +109,7 @@ export const splitBlocks = (text: string): Block[] => {
         tableLines.push(lines[end]);
       }
       blocks.push({ type: "table", content: tableLines.join("\n") });
+      applyBraceDelta(tableLines.join("\n"));
       i = end;
       continue;
     }
@@ -106,6 +127,7 @@ export const splitBlocks = (text: string): Block[] => {
         }
       }
       blocks.push({ type: "gallery", content: galleryLines.join("\n") });
+      applyBraceDelta(galleryLines.join("\n"));
       i = end;
       continue;
     }
@@ -153,10 +175,12 @@ export const splitBlocks = (text: string): Block[] => {
     if (listMatch) {
       flushParagraph();
       blocks.push({ type: "list", marker: listMatch[1], content: listMatch[2].trim() });
+      applyBraceDelta(line);
       continue;
     }
 
     paragraphLines.push(line);
+    applyBraceDelta(line);
   }
   flushParagraph();
 

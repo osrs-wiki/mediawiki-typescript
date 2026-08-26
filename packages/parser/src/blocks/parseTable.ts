@@ -72,7 +72,17 @@ export const parseTableBlock = (raw: string): ParsedTable => {
     }
     if (line.startsWith("|-")) {
       flushRow();
-      currentRow = { attributes: line.slice(2).trim() || undefined, cells: [] };
+      const rest = line.slice(2).trim();
+      if (rest.startsWith("{{")) {
+        // A "|-{{...}}" marker immediately followed by a template/parser-function call (e.g. a
+        // conditional {{#switch}} producing a row) rather than genuine HTML row attributes —
+        // preserve it as the row's own cell content instead of discarding it as "attributes".
+        currentRow = { cells: [] };
+        currentCell = { header: false, content: rest };
+        currentRow.cells.push(currentCell);
+      } else {
+        currentRow = { attributes: rest || undefined, cells: [] };
+      }
       continue;
     }
     if (line.startsWith("!")) {
@@ -93,6 +103,15 @@ export const parseTableBlock = (raw: string): ParsedTable => {
       } else {
         currentCell.content = `${currentCell.content}\n${line}`;
       }
+    } else {
+      // No active cell (e.g. a bare template call relying on its own transclusion to emit the
+      // "|-"/"|" row and cell markup, which this pass doesn't expand) — preserve it as its own
+      // cell rather than silently dropping the content.
+      if (!currentRow) {
+        currentRow = { cells: [] };
+      }
+      currentCell = { header: false, content: line };
+      currentRow.cells.push(currentCell);
     }
   }
   flushRow();

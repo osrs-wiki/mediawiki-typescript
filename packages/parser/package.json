@@ -24,8 +24,10 @@
     "chevrotain": "^13.2.0"
   },
   "devDependencies": {
+    "@types/diff": "^7.0.2",
     "@types/jest": "^30.0.0",
     "@types/node": "^26.3.0",
+    "diff": "^9.0.0",
     "jest": "^30.4.2",
     "ts-jest": "^29.4.12",
     "tsup": "^8.5.1",
