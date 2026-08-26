@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IfParserFunction it should render with a then and else 1`] = `
+"{{#if:test string|yes|no}}
+"
+`;
+
+exports[`IfParserFunction it should render with an empty test 1`] = `
+"{{#if:|yes|no}}
+"
+`;
+
+exports[`IfParserFunction it should render with only a then 1`] = `
+"{{#if:foo|yes}}
+"
+`;

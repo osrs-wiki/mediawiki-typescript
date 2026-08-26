@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`VarDefineParserFunction it should render with a variableName and value 1`] = `
+"{{#vardefine:weekly|{{#expr:floor(floor(({{#time:U}}-{{#time:U|31 December 2025 10:30:00 UTC}})/(60*60*24))/7) mod 2}}}}
+"
+`;

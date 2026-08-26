@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TimeLParserFunction it should render with a dateTime and language 1`] = `
+"{{#timel:l|now|uk}}
+"
+`;
+
+exports[`TimeLParserFunction it should render with only a format 1`] = `
+"{{#timel:H:i, j xg Y (e)}}
+"
+`;

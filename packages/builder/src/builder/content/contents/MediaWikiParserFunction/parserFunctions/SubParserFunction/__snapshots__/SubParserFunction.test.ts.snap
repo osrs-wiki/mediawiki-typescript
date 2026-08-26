@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SubParserFunction it should render with value and start 1`] = `
+"{{#sub:Hello world|6}}
+"
+`;
+
+exports[`SubParserFunction it should render with value, start, and length 1`] = `
+"{{#sub:Hello world|0|5}}
+"
+`;

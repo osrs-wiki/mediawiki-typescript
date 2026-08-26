@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TimeFLParserFunction it should render with a dateTime, formatType, and language 1`] = `
+"{{#timefl:now|pretty|pl}}
+"
+`;
+
+exports[`TimeFLParserFunction it should render with no params 1`] = `
+"{{#timefl:}}
+"
+`;

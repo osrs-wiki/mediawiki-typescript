@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TitlePartsParserFunction it should render with a negative startSegment 1`] = `
+"{{#titleparts:Talk:Foo/bar/baz/quok|-1}}
+"
+`;
+
+exports[`TitlePartsParserFunction it should render with numSegments and startSegment 1`] = `
+"{{#titleparts:Talk:Foo/bar/baz/quok|2|2}}
+"
+`;
+
+exports[`TitlePartsParserFunction it should render with only a pageName 1`] = `
+"{{#titleparts:Talk:Foo/bar/baz/quok}}
+"
+`;

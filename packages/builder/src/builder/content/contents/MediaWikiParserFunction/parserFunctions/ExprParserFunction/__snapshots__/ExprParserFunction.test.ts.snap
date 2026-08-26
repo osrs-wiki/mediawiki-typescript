@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ExprParserFunction it should render a nested expression from the user's example 1`] = `
+"{{#expr:floor(floor(({{#time:U}}-{{#time:U|31 December 2025 10:30:00 UTC}})/(60*60*24))/7) mod 2}}
+"
+`;
+
+exports[`ExprParserFunction it should render a simple expression 1`] = `
+"{{#expr:1 + 1}}
+"
+`;

@@ -1,15 +1,34 @@
 {
   "name": "@mediawiki-typescript/parser",
   "version": "0.0.0",
+  "description": "A wikitext parser for TypeScript that builds @mediawiki-typescript/builder content from raw wikitext.",
+  "license": "GPL-3.0",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "files": [
+    "README.md",
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
+    "dev": "tsup --watch",
     "lint": "eslint src",
-    "test": "echo \"No tests yet\""
+    "test": "jest"
+  },
+  "dependencies": {
+    "@mediawiki-typescript/builder": "0.0.0",
+    "chevrotain": "^13.2.0"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/node": "^26.3.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.12",
+    "tsup": "^8.5.1",
     "typescript": "^6.0.3"
   }
 }

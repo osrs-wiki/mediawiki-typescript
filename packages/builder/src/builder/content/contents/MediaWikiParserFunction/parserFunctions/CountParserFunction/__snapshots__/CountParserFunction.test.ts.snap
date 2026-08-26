@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`CountParserFunction it should render with value and substring 1`] = `
+"{{#count:Hello world world|world}}
+"
+`;

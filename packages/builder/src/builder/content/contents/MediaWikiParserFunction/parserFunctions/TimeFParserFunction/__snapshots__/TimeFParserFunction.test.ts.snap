@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TimeFParserFunction it should render with a dateTime, formatType, and language 1`] = `
+"{{#timef:now|both|en}}
+"
+`;
+
+exports[`TimeFParserFunction it should render with no params 1`] = `
+"{{#timef:}}
+"
+`;
+
+exports[`TimeFParserFunction it should render with only a formatType 1`] = `
+"{{#timef:|time}}
+"
+`;

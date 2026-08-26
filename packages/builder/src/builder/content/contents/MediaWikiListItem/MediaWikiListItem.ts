@@ -12,8 +12,13 @@ export class MediaWikiListItem extends MediaWikiContent {
 
   build() {
     const parsedValue = this.buildChildren();
-    return `\n${(this.options.ordered ? "#" : "*").repeat(
-      this.options.level
-    )} ${parsedValue.trim()}`;
+    const marker = this.options.definitionType
+      ? this.options.definitionType === "term"
+        ? ";"
+        : ":"
+      : this.options.ordered
+        ? "#"
+        : "*";
+    return `\n${marker.repeat(this.options.level)} ${parsedValue.trim()}`;
   }
 }

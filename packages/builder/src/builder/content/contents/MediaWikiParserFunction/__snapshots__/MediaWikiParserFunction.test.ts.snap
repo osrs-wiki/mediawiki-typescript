@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MediaWikiParserFunction it should render a plain magic-word-style call 1`] = `
+"{{lc:AbC}}
+"
+`;
+
+exports[`MediaWikiParserFunction it should render with no params 1`] = `
+"{{#switch}}
+"
+`;
+
+exports[`MediaWikiParserFunction it should render with params 1`] = `
+"{{#switch:{{#var:weekly}}|0=LMS Competitive|1=}}
+"
+`;

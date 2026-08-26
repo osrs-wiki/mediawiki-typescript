@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IfExistParserFunction it should render with exists and notExists 1`] = `
+"{{#ifexist:Help:Extension:ParserFunctions|exists|doesn't exist}}
+"
+`;
+
+exports[`IfExistParserFunction it should render with only exists 1`] = `
+"{{#ifexist:Special:Watchlist|exists}}
+"
+`;
