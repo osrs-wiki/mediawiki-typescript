@@ -24,7 +24,7 @@ A '''world''' is an instance of ''[[Old School RuneScape]]'' that can be joined 
 ==Types of worlds==
 {| class="wikitable sortable align-left-1 align-left-2 align-left-3" style="text-align:center;"
 |-
-! Type
+! colspan="2" | Type
 ! Description
 |-
 | {{plinkt|Free-to-play|pic=Free-to-play icon}}
@@ -73,7 +73,7 @@ A '''world''' is an instance of ''[[Old School RuneScape]]'' that can be joined 
 ===Other===
 {| class="wikitable sortable align-left-1 align-left-2 align-left-3" style="text-align:center;"
 |-
-! Type
+! colspan="2" | Type
 ! Description
 |-
 | {{plinkp|Members|pic=Member icon}}
@@ -2206,7 +2206,7 @@ exports[`parse - real-world OSRS Wiki 'Worlds' article diff between input and re
  |-
 -|{{plinkt|Free-to-play|pic=Free-to-play icon}}
 -|The only worlds available to [[Free-to-play|free]] players. Certain worlds may be earmarked for specific activities.
-+! Type
++! colspan="2" | Type
 +! Description
  |-
 -|{{plinkt|Members|pic=Member icon}}
@@ -2280,7 +2280,7 @@ exports[`parse - real-world OSRS Wiki 'Worlds' article diff between input and re
 -|{{plinkp|Members|pic=Member icon}} '''/''' {{plinkp|Free-to-play|pic=Free-to-play icon}}
 -|Skill Total
 -|Limited to players with the indicated skill total.
-+! Type
++! colspan="2" | Type
 +! Description
  |-
 -|{{plinkp|Members|pic=Member icon}} '''/''' {{plinkp|PvP world|pic=PvP world icon}}

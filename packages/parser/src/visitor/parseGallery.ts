@@ -39,11 +39,19 @@ export const parseGallery = (image: string): MediaWikiGallery => {
     attributes?.mode && GALLERY_MODES.includes(attributes.mode)
       ? (attributes.mode as MediaWikiGalleryMode)
       : undefined;
+  const toValidNumber = (value: string | undefined): number | undefined => {
+    if (value === undefined) return undefined;
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  };
   const options: MediaWikiGalleryOptions = {};
   if (mode) options.mode = mode;
-  if (attributes?.widths) options.widths = Number(attributes.widths);
-  if (attributes?.heights) options.heights = Number(attributes.heights);
-  if (attributes?.perrow) options.perrow = Number(attributes.perrow);
+  const widths = toValidNumber(attributes?.widths);
+  if (widths !== undefined) options.widths = widths;
+  const heights = toValidNumber(attributes?.heights);
+  if (heights !== undefined) options.heights = heights;
+  const perrow = toValidNumber(attributes?.perrow);
+  if (perrow !== undefined) options.perrow = perrow;
   if (attributes?.caption !== undefined) options.caption = attributes.caption;
   if (attributes?.class) options.class = attributes.class;
   if (attributes?.showfilename === "yes") options.showfilename = true;

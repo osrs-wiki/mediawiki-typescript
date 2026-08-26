@@ -69,11 +69,18 @@ const toCellOptions = (
   cell: ParsedTableCell
 ): MediaWikiTableCellOptions | undefined => {
   const attributes = cell.attributes ? parseAttributes(cell.attributes) : undefined;
+  const toValidNumber = (value: string | undefined): number | undefined => {
+    if (value === undefined) return undefined;
+    const parsed = Number(value);
+    return Number.isNaN(parsed) ? undefined : parsed;
+  };
   const options: MediaWikiTableCellOptions = {};
   if (attributes?.class) options.class = attributes.class;
   if (attributes?.style) options.style = attributes.style;
-  if (attributes?.colspan) options.colspan = Number(attributes.colspan);
-  if (attributes?.rowspan) options.rowspan = Number(attributes.rowspan);
+  const colspan = toValidNumber(attributes?.colspan);
+  if (colspan !== undefined) options.colspan = colspan;
+  const rowspan = toValidNumber(attributes?.rowspan);
+  if (rowspan !== undefined) options.rowspan = rowspan;
   if (attributes?.scope === "row" || attributes?.scope === "col") options.scope = attributes.scope;
   if (cell.header) options.header = true;
   return Object.keys(options).length > 0 ? options : undefined;

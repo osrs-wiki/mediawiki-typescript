@@ -88,7 +88,8 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
     const segmentStrings = ctx.segments.map((segment) =>
       segmentToString(this.visit(segment) as Piece[])
     );
-    const [first, ...rest] = segmentStrings;
+    const [rawFirst, ...rest] = segmentStrings;
+    const first = rawFirst.trim();
     const colonIndex = first.indexOf(":");
 
     if (colonIndex !== -1) {
@@ -137,9 +138,10 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
   }
 
   link(ctx: { segments: CstNode[] }): Piece {
-    const [target, ...rest] = ctx.segments.map((segment) =>
+    const [rawTarget, ...rest] = ctx.segments.map((segment) =>
       segmentToString(this.visit(segment) as Piece[])
     );
+    const target = rawTarget.trim();
     if (/^(file|image):/i.test(target)) {
       const fileName = target.replace(/^(file|image):/i, "");
       return {
@@ -161,7 +163,7 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
   }
 
   externalLink(ctx: { body: CstNode[] }): Piece {
-    const body = segmentToString(this.visit(ctx.body[0]) as Piece[]);
+    const body = segmentToString(this.visit(ctx.body[0]) as Piece[]).trim();
     const spaceIndex = body.search(/\s/);
     const link = spaceIndex === -1 ? body : body.slice(0, spaceIndex);
     const label = spaceIndex === -1 ? "" : body.slice(spaceIndex + 1).trim();

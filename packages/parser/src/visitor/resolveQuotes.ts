@@ -85,9 +85,13 @@ export const resolveQuotes = (pieces: Piece[]): MediaWikiContent[] => {
  * param. Each content's own trailing newline (content classes like `MediaWikiTemplate`/
  * `MediaWikiParserFunction` always append one for standalone top-level use) is stripped before
  * joining, so a nested call doesn't leave a stray newline embedded mid-string when more text follows.
+ *
+ * Deliberately does NOT trim the result: a positional template/parser-function parameter's leading
+ * and trailing whitespace is semantically significant in real MediaWiki (only named parameters'
+ * whitespace is stripped) — callers should trim explicitly where the segment is known to be an
+ * identifier (a template name, a link target, etc.) rather than arbitrary param/label content.
  */
 export const segmentToString = (pieces: Piece[]): string =>
   resolveQuotes(pieces)
     .map((content) => content.build().replace(/\n+$/, ""))
-    .join("")
-    .trim();
+    .join("");
