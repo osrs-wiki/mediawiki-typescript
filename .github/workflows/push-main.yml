@@ -15,11 +15,15 @@ jobs:
     name: "Changeset"
     needs: lint_build_test
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
 
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.PUBLISH_PACKAGES }}
 
       - name: Use Node.js
         uses: actions/setup-node@v4
