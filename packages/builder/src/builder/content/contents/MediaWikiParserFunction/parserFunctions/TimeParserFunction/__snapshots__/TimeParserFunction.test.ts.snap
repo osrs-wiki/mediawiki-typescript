@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`TimeParserFunction it should render with a dateTime 1`] = `
+"{{#time:Y-m-d|now}}
+"
+`;
+
+exports[`TimeParserFunction it should render with dateTime, language, and local 1`] = `
+"{{#time:d F Y|1988-02-28|nl|1}}
+"
+`;
+
+exports[`TimeParserFunction it should render with only a format 1`] = `
+"{{#time:Y-m-d}}
+"
+`;

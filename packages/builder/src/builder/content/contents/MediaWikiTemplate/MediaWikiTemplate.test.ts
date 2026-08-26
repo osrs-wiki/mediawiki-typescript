@@ -38,4 +38,11 @@ describe("MediaWikiTemplate", () => {
 
     expect(template.build()).toMatchSnapshot();
   });
+
+  test("it should render with a subst: prefix when subst option is set", () => {
+    const template = new MediaWikiTemplate("test", { subst: true });
+    template.add("one", "one");
+
+    expect(template.build()).toBe("{{subst:test|one=one}}\n");
+  });
 });

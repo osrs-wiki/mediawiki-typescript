@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IfExprParserFunction it should render with a then and else 1`] = `
+"{{#ifexpr:1 > 0|yes|no}}
+"
+`;
+
+exports[`IfExprParserFunction it should render with no then or else 1`] = `
+"{{#ifexpr:1 > 0}}
+"
+`;
+
+exports[`IfExprParserFunction it should render with only a then 1`] = `
+"{{#ifexpr:1 > 0|yes}}
+"
+`;

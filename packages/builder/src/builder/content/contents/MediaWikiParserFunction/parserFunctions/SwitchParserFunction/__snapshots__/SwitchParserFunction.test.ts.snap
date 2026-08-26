@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`SwitchParserFunction it should render with a trailing bare default 1`] = `
+"{{#switch:baz|foo=Foo|baz=Baz|Bar}}
+"
+`;
+
+exports[`SwitchParserFunction it should render with an explicit #default case 1`] = `
+"{{#switch:test|foo=Foo|#default=Bar|baz=Baz}}
+"
+`;
+
+exports[`SwitchParserFunction it should render with cases and a default 1`] = `
+"{{#switch:{{#var:weekly}}|0=LMS Competitive|1=}}
+"
+`;
+
+exports[`SwitchParserFunction it should render with fallthrough cases sharing a result 1`] = `
+"{{#switch:test|case1=result1|case2|case3|case4=result234}}
+"
+`;

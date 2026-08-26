@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IfEqParserFunction it should render with a then and else 1`] = `
+"{{#ifeq:foo|bar|equal|not equal}}
+"
+`;
+
+exports[`IfEqParserFunction it should render with only a then 1`] = `
+"{{#ifeq:foo|foo|equal}}
+"
+`;

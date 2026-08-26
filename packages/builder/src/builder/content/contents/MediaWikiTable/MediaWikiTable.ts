@@ -4,18 +4,21 @@ import {
   MediaWikiTableParams,
   MediaWikiTableRowOptions,
   MediaWikiTableCellOptions,
+  MediaWikiTableCaptionOptions,
 } from "./MediaWikiTable.types";
 import { toKeyValueString } from "../../../../utils/objects";
 import MediaWikiContent from "../../MediaWikiContent";
 
 export class MediaWikiTable extends MediaWikiContent {
   caption?: string;
+  captionOptions?: MediaWikiTableCaptionOptions;
   options?: MediaWikiTableOptions;
   rows: MediaWikiTableRow[];
 
   constructor(params: MediaWikiTableParams) {
     super();
     this.caption = params.caption;
+    this.captionOptions = params.captionOptions;
     this.rows = params.rows;
     this.options = params.options;
   }
@@ -24,9 +27,14 @@ export class MediaWikiTable extends MediaWikiContent {
     const tableOptions = this.options
       ? " " + toKeyValueString<MediaWikiTableOptions>(this.options)
       : "";
-    return `{|${tableOptions}\n${
-      this.caption ? `|+${this.caption}\n` : ""
-    }${this.rows
+    const caption = this.caption
+      ? this.captionOptions
+        ? `|+ ${toKeyValueString<MediaWikiTableCaptionOptions>(
+            this.captionOptions
+          )} | ${this.caption}\n`
+        : `|+${this.caption}\n`
+      : "";
+    return `{|${tableOptions}\n${caption}${this.rows
       .map(
         (row) =>
           `|-${

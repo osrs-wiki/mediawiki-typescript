@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`VarDefineEchoParserFunction it should render with a variableName and value 1`] = `
+"{{#vardefineecho:counter|1}}
+"
+`;

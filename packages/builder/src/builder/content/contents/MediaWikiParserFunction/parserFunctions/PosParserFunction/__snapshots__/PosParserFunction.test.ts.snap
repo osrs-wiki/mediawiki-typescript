@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`PosParserFunction it should render with an offset 1`] = `
+"{{#pos:Hello world world|world|8}}
+"
+`;
+
+exports[`PosParserFunction it should render with value and target 1`] = `
+"{{#pos:Hello world|world}}
+"
+`;

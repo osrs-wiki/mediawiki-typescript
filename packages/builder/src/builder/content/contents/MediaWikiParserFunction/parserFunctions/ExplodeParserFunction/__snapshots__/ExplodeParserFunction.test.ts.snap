@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ExplodeParserFunction it should render with value and delimiter 1`] = `
+"{{#explode:John Q. Public| }}
+"
+`;
+
+exports[`ExplodeParserFunction it should render with value, delimiter, and position 1`] = `
+"{{#explode:John Q. Public| |2}}
+"
+`;

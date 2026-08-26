@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`IfErrorParserFunction it should render with an error and correct value 1`] = `
+"{{#iferror:{{#expr:1+X}}|error|correct}}
+"
+`;
+
+exports[`IfErrorParserFunction it should render with no error or correct value 1`] = `
+"{{#iferror:{{#expr:1+2}}}}
+"
+`;
+
+exports[`IfErrorParserFunction it should render with only an error value 1`] = `
+"{{#iferror:{{#expr:1+2}}|error}}
+"
+`;

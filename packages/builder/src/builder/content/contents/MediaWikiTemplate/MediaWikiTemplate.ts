@@ -31,6 +31,7 @@ export class MediaWikiTemplate extends MediaWikiContent {
         }${param.value}`,
       ""
     );
-    return `{{${this.name}${params}${collapsed ? "" : "\n"}}}\n`;
+    const subst = this.options?.subst ? "subst:" : "";
+    return `{{${subst}${this.name}${params}${collapsed ? "" : "\n"}}}\n`;
   }
 }

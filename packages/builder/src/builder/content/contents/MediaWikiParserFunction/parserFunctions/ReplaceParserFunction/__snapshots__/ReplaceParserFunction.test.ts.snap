@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReplaceParserFunction it should render with value and from 1`] = `
+"{{#replace:Hello world|world}}
+"
+`;
+
+exports[`ReplaceParserFunction it should render with value, from, to, and limit 1`] = `
+"{{#replace:a-a-a|-|_|1}}
+"
+`;

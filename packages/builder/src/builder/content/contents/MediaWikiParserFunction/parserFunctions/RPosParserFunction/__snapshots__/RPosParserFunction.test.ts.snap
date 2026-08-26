@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`RPosParserFunction it should render with value and target 1`] = `
+"{{#rpos:Hello world world|world}}
+"
+`;

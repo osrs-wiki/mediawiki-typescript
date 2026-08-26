@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`RelToAbsParserFunction it should render with a path and basePath 1`] = `
+"{{#rel2abs:../quok|Help:Foo/bar/baz}}
+"
+`;
+
+exports[`RelToAbsParserFunction it should render with only a path 1`] = `
+"{{#rel2abs:/quok}}
+"
+`;

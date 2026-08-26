@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`UppercaseFirstParserFunction it should render with a value 1`] = `
+"{{ucfirst:abc}}
+"
+`;
