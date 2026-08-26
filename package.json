@@ -2,6 +2,7 @@
   "name": "mediawiki-typescript",
   "version": "0.0.0",
   "private": true,
+  "license": "GPL-3.0",
   "workspaces": [
     "apps/*",
     "packages/*"
@@ -11,16 +12,21 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "changeset": "changeset",
+    "version": "changeset version",
+    "release": "turbo run build && changeset publish"
   },
   "devDependencies": {
-    "@types/node": "^24.10.1",
-    "@typescript-eslint/eslint-plugin": "^8.47.0",
-    "@typescript-eslint/parser": "^8.47.0",
-    "eslint": "^9.39.1",
-    "prettier": "^3.6.2",
-    "turbo": "^2.6.1",
-    "typescript": "^5.9.3"
+    "@changesets/changelog-github": "^1.0.0",
+    "@changesets/cli": "^3.0.1",
+    "@types/node": "^26.3.0",
+    "@typescript-eslint/eslint-plugin": "^8.68.0",
+    "@typescript-eslint/parser": "^8.68.0",
+    "eslint": "^10.9.1",
+    "prettier": "^3.9.6",
+    "turbo": "^2.10.12",
+    "typescript": "^6.0.3"
   },
   "packageManager": "npm@10.8.2",
   "engines": {

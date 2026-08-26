@@ -52,3 +52,12 @@ npm run dev
 - **ESLint**: Code linting
 - **Prettier**: Code formatting
 - **npm**: Package management
+
+## Releasing
+
+This repo uses [Changesets](https://github.com/changesets/changesets) to version and publish packages to npm.
+
+1. Run `npm run changeset` and describe your change; commit the generated `.changeset/*.md` file with your PR.
+2. Merging to `main` triggers a "Version Release" PR (via `changesets/action`) that bumps versions and updates changelogs.
+3. Merging that release PR publishes the updated packages to npm.
+

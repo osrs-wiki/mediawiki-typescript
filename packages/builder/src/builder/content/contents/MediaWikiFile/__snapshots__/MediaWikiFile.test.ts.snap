@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`MediaWikiFile caption with MediaWikiContent array 1`] = `"[[File:test.png|''caption ''[https://test.com link]'' test'']]"`;
+
+exports[`MediaWikiFile caption with MediaWikiText 1`] = `"[[File:test.png|''caption'']]"`;
