@@ -12,11 +12,23 @@ import {
   MediaWikiExternalLink,
   MediaWikiFile,
   MediaWikiHTML,
+  MediaWikiIncludeOnly,
   MediaWikiLink,
+  MediaWikiNoInclude,
+  MediaWikiOnlyInclude,
   MediaWikiParserFunction,
   MediaWikiTemplate,
   MediaWikiText,
 } from "@mediawiki-typescript/builder";
+
+// Preprocessor directives, not real HTML — their content is still parsed as wikitext, but they
+// map to dedicated builder types instead of the generic MediaWikiHTML.
+// https://www.mediawiki.org/wiki/Help:Transclusion#Source_page_syntax
+const TRANSCLUSION_TAG_BUILDERS = {
+  noinclude: MediaWikiNoInclude,
+  includeonly: MediaWikiIncludeOnly,
+  onlyinclude: MediaWikiOnlyInclude,
+} as const;
 
 const TOP_LEVEL_LITERAL_TOKEN_KEYS = new Set(["Pipe", "TemplateClose", "LinkClose", "ExtLinkClose"]);
 
@@ -74,6 +86,13 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
     if (colonIndex !== -1) {
       const beforeColon = first.slice(0, colonIndex).trim();
       const afterColon = first.slice(colonIndex + 1);
+      // {{subst:Name|...}} — substitution modifier on a template transclusion, not a parser function.
+      if (beforeColon.toLowerCase() === "subst") {
+        return {
+          kind: "content",
+          value: this.buildTemplate(afterColon, rest, { subst: true }),
+        };
+      }
       const isParserFunction =
         beforeColon.startsWith("#") ||
         BARE_PARSER_FUNCTION_NAMES.includes(beforeColon.toLowerCase());
@@ -85,7 +104,15 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
       }
     }
 
-    const template = new MediaWikiTemplate(first);
+    return { kind: "content", value: this.buildTemplate(first, rest) };
+  }
+
+  private buildTemplate(
+    name: string,
+    rest: string[],
+    options?: { subst?: boolean }
+  ): MediaWikiTemplate {
+    const template = new MediaWikiTemplate(name, options);
     rest.forEach((value) => {
       const eqIndex = value.indexOf("=");
       if (eqIndex === -1) {
@@ -94,7 +121,7 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
         template.add(value.slice(0, eqIndex).trim(), value.slice(eqIndex + 1).trim());
       }
     });
-    return { kind: "content", value: template };
+    return template;
   }
 
   link(ctx: { segments: CstNode[] }): Piece {
@@ -153,6 +180,14 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
       this.pieceFromEntry(key, element)
     );
     const children = selfClosing ? undefined : resolveQuotes(childPieces);
+
+    const TransclusionTag =
+      TRANSCLUSION_TAG_BUILDERS[
+        tagName.toLowerCase() as keyof typeof TRANSCLUSION_TAG_BUILDERS
+      ];
+    if (TransclusionTag) {
+      return { kind: "content", value: new TransclusionTag(children) };
+    }
 
     return {
       kind: "content",

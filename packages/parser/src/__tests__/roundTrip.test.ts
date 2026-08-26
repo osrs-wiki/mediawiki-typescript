@@ -9,8 +9,11 @@ import {
   MediaWikiHeader,
   MediaWikiHiddenCategory,
   MediaWikiHTML,
+  MediaWikiIncludeOnly,
   MediaWikiLink,
   MediaWikiListItem,
+  MediaWikiNoInclude,
+  MediaWikiOnlyInclude,
   MediaWikiParserFunction,
   MediaWikiRedirect,
   MediaWikiSeparator,
@@ -151,6 +154,30 @@ describe("parse - round trip of existing builder content types", () => {
     template.add("name", "Test");
     const result = await parse(template.build());
     expect(result).toEqual([template]);
+  });
+
+  test("MediaWikiTemplate (subst)", async () => {
+    const template = new MediaWikiTemplate("Welcome", { subst: true });
+    const result = await parse(template.build());
+    expect(result).toEqual([template]);
+  });
+
+  test("MediaWikiNoInclude", async () => {
+    const noInclude = new MediaWikiNoInclude([new MediaWikiText("hidden")]);
+    const result = await parse(noInclude.build());
+    expect(result).toEqual([noInclude]);
+  });
+
+  test("MediaWikiIncludeOnly", async () => {
+    const includeOnly = new MediaWikiIncludeOnly([new MediaWikiText("shown")]);
+    const result = await parse(includeOnly.build());
+    expect(result).toEqual([includeOnly]);
+  });
+
+  test("MediaWikiOnlyInclude", async () => {
+    const onlyInclude = new MediaWikiOnlyInclude([new MediaWikiText("shown")]);
+    const result = await parse(onlyInclude.build());
+    expect(result).toEqual([onlyInclude]);
   });
 
   test("MediaWikiParserFunction", async () => {

@@ -99,6 +99,17 @@ Use the **Completion Checklist** at the top to track progress across sessions. D
 - [x] Added `MediaWikiCategory`/`MediaWikiHiddenCategory` to `roundTrip.test.ts`
 - [x] Full monorepo `build`/`lint`/`test` green; parser package coverage 99.37% statements / 99.5% lines (142/142 tests)
 
+### Part 2G — Full Help:Transclusion / Transclusion coverage (builder + parser) (DONE)
+- [x] Confirmed `{{PageName}}`/`{{:MainNamespaceArticle}}`/`{{User:Example}}`/`{{/subpage}}`/`{{Special:Page|params}}` transclusion targets and their parameters already round-trip correctly through the existing generic `MediaWikiTemplate` — no builder changes needed for target-page syntax, since a colon or slash prefix is just an arbitrary character in `name`
+- [x] Builder: added `subst?: boolean` to `MediaWikiTemplateOptions`, rendering `{{subst:Name|...}}` when set, for the substitution alternative to transclusion mentioned on the Transclusion page
+- [x] Builder: new content types `MediaWikiNoInclude`, `MediaWikiIncludeOnly`, `MediaWikiOnlyInclude` (`<noinclude>`/`<includeonly>`/`<onlyinclude>`) — these are preprocessor directives, not real HTML elements, so they get dedicated types instead of falling into the generic `MediaWikiHTML`
+- [x] Parser: `templateOrParserFunction()` now detects a `subst:` prefix before the existing parser-function-name check and builds a `MediaWikiTemplate` with `{ subst: true }`, stripping the prefix from `name` (previously this coincidentally round-tripped only because the whole `"subst:Foo"` string was kept as an opaque `name`)
+- [x] Parser: `pairedTag()` now dispatches `noinclude`/`includeonly`/`onlyinclude` (case-insensitively) to the new dedicated content types instead of `MediaWikiHTML`; their content is still fully wikitext-parsed (unlike the `OPAQUE_TAG_NAMES` list), since these tags only gate visibility, not markup
+- [x] `packages/builder/.../MediaWikiTemplate.test.ts`, `MediaWikiNoInclude.test.ts`, `MediaWikiIncludeOnly.test.ts`, `MediaWikiOnlyInclude.test.ts` — new/updated
+- [x] `packages/parser/src/__tests__/transclusion.test.ts` — new: target-page syntax (template/namespaced/main-namespace/subpage/special-page-with-params), `subst:` (plain and with parameters), and source-page syntax (`noinclude`/`includeonly`/`onlyinclude`, including nesting and wikitext parsed inside them)
+- [x] Added `MediaWikiTemplate` (subst), `MediaWikiNoInclude`, `MediaWikiIncludeOnly`, `MediaWikiOnlyInclude` to `roundTrip.test.ts`
+- [x] Full monorepo `build`/`lint`/`test` green; parser package coverage 99.38% statements / 99.5% lines (159/159 tests)
+
 ### Documented, intentionally out-of-scope gaps (see file for full rationale)
 - `MediaWikiBreak` (`build()` = bare `"\n"`) cannot be round-tripped — indistinguishable from ordinary whitespace once parsed back; real MediaWiki itself requires `<br/>` for a manual line break (Help:Formatting), so this is treated as a pre-existing quirk of the ported class, not something to silently "fix" without explicit approval.
 - `MediaWikiText.styling.underline` (`<u>...</u>`) round-trips to an equivalent `MediaWikiHTML("u", ...)` node instead of the exact original `MediaWikiText` type, since a generic `<u>` tag is indistinguishable from one MediaWiki's own class would produce.
@@ -107,6 +118,8 @@ Use the **Completion Checklist** at the top to track progress across sessions. D
 - `<col>`/`<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` and legacy HTML4 table attributes (`cellpadding`, `cellspacing`, `border=`, `width=`) — not modeled, matching either MediaWiki's own lack of support (former) or the page's own "invalid in HTML5" guidance to use `style` instead (latter).
 - Signatures (`~~~`/`~~~~`/`~~~~~`) are dynamic magic words with no meaningful static "build" representation; left as plain literal text, not modeled as a content type.
 - Category redirects, category trees (`<categorytree>`, `Extension:CategoryTree`), and tracking categories (Help:Categories) are extension/administrative features with no wikitext construct of their own beyond the plain `MediaWikiRedirect`/`MediaWikiCategory` tags already supported — nothing further to model.
+- `safesubst:`/`msgnw:` (Help:Substitution, a separate page not covered by this task) are not modeled as distinct `MediaWikiTemplate` options — only the plain `subst:` prefix mentioned on the Transclusion page was added; both are trivial to add later following the same pattern if that page is tackled.
+- Extension-based transclusion alternatives (Labeled Section Transclusion, Scribunto/Module transclusion, Semantic MediaWiki inline queries) have no wikitext syntax of their own beyond a plain `{{...}}`/`{{#invoke:...}}` call, which already round-trips through the generic `MediaWikiTemplate`/`MediaWikiParserFunction` mechanism — nothing further to model.
 
 ---
 
