@@ -1,0 +1,42 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`ReflistTemplate should render with a column count 1`] = `
+"{{Reflist|2}}
+"
+`;
+
+exports[`ReflistTemplate should render with a column width 1`] = `
+"{{Reflist|colwidth=30em}}
+"
+`;
+
+exports[`ReflistTemplate should render with a group 1`] = `
+"{{Reflist|group=note}}
+"
+`;
+
+exports[`ReflistTemplate should render with a list style 1`] = `
+"{{Reflist|liststyle=upper-roman}}
+"
+`;
+
+exports[`ReflistTemplate should render with every option combined 1`] = `
+"{{Reflist
+|2
+|colwidth = 30em
+|liststyle = upper-roman
+|group = note
+|refs = <ref name="test">Example reference.</ref>
+}}
+"
+`;
+
+exports[`ReflistTemplate should render with no options 1`] = `
+"{{Reflist}}
+"
+`;
+
+exports[`ReflistTemplate should render with refs 1`] = `
+"{{Reflist|refs=<ref name="test">Example reference.</ref>}}
+"
+`;
