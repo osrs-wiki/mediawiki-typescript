@@ -3,9 +3,23 @@ export type ListBlock = { type: "list"; marker: string; content: string };
 export type HorizontalRuleBlock = { type: "hr" };
 export type ParagraphBlock = { type: "paragraph"; content: string };
 export type TableBlock = { type: "table"; content: string };
+export type GalleryBlock = { type: "gallery"; content: string };
 export type TocBlock = { type: "toc" };
 export type RedirectBlock = { type: "redirect"; target: string };
 export type HiddenCategoryBlock = { type: "hiddencat" };
+
+/** Simple `__WORD__`-style Help:Magic_words#Behavior_switches, beyond `__TOC__`/`__HIDDENCAT__` above. */
+export const BEHAVIOR_SWITCH_WORDS = [
+  "NOTOC",
+  "FORCETOC",
+  "NOEDITSECTION",
+  "NOGALLERY",
+  "STATICREDIRECT",
+  "INDEX",
+  "NOINDEX",
+] as const;
+export type BehaviorSwitchWord = (typeof BEHAVIOR_SWITCH_WORDS)[number];
+export type BehaviorSwitchBlock = { type: "behaviorswitch"; word: BehaviorSwitchWord };
 
 export type Block =
   | HeadingBlock
@@ -13,17 +27,22 @@ export type Block =
   | HorizontalRuleBlock
   | ParagraphBlock
   | TableBlock
+  | GalleryBlock
   | TocBlock
   | RedirectBlock
-  | HiddenCategoryBlock;
+  | HiddenCategoryBlock
+  | BehaviorSwitchBlock;
 
 const HEADING_PATTERN = /^ {0,3}(={1,6})(.*?)\1\s*$/;
 const HORIZONTAL_RULE_PATTERN = /^-{4,}\s*$/;
 const LIST_PATTERN = /^ {0,3}([*#;:]+)(.*)$/;
 const TABLE_START_PATTERN = /^ {0,3}\{\|/;
 const TABLE_END_PATTERN = /^ {0,3}\|\}/;
+const GALLERY_START_PATTERN = /^ {0,3}<gallery(\s[^>]*)?>/i;
+const GALLERY_END_PATTERN = /<\/gallery>\s*$/i;
 const TOC_PATTERN = /^__TOC__$/;
 const HIDDEN_CATEGORY_PATTERN = /^__HIDDENCAT__$/;
+const BEHAVIOR_SWITCH_PATTERN = new RegExp(`^__(${BEHAVIOR_SWITCH_WORDS.join("|")})__$`);
 const REDIRECT_PATTERN = /^#REDIRECT\s*\[\[([^\]]+)\]\]/i;
 
 /**
@@ -74,6 +93,23 @@ export const splitBlocks = (text: string): Block[] => {
       continue;
     }
 
+    // Blank lines are valid inside a gallery body (Help:Images#Gallery_syntax), so this needs its
+    // own multi-line block — unlike other opaque tags, gallery content must survive blank-line paragraph splitting.
+    if (GALLERY_START_PATTERN.test(line)) {
+      flushParagraph();
+      const galleryLines = [line];
+      let end = i;
+      while (end < lines.length && !GALLERY_END_PATTERN.test(lines[end])) {
+        end += 1;
+        if (end < lines.length) {
+          galleryLines.push(lines[end]);
+        }
+      }
+      blocks.push({ type: "gallery", content: galleryLines.join("\n") });
+      i = end;
+      continue;
+    }
+
     if (TOC_PATTERN.test(line.trim())) {
       flushParagraph();
       blocks.push({ type: "toc" });
@@ -83,6 +119,13 @@ export const splitBlocks = (text: string): Block[] => {
     if (HIDDEN_CATEGORY_PATTERN.test(line.trim())) {
       flushParagraph();
       blocks.push({ type: "hiddencat" });
+      continue;
+    }
+
+    const behaviorSwitchMatch = BEHAVIOR_SWITCH_PATTERN.exec(line.trim());
+    if (behaviorSwitchMatch) {
+      flushParagraph();
+      blocks.push({ type: "behaviorswitch", word: behaviorSwitchMatch[1] as BehaviorSwitchWord });
       continue;
     }
 

@@ -1,6 +1,7 @@
 import { CstNode, IToken } from "chevrotain";
 import { orderedChildren } from "./orderedChildren";
 import { parseFileOptions } from "./parseFileOptions";
+import { parseGallery } from "./parseGallery";
 import { Piece } from "./Piece";
 import { resolveQuotes, segmentToString } from "./resolveQuotes";
 import { parseAttributes } from "../attributes";
@@ -9,6 +10,7 @@ import { wikitextParser } from "../parser/parserInstance";
 import {
   MediaWikiCategory,
   MediaWikiComment,
+  MediaWikiDefaultSort,
   MediaWikiExternalLink,
   MediaWikiFile,
   MediaWikiHTML,
@@ -17,6 +19,7 @@ import {
   MediaWikiNoInclude,
   MediaWikiOnlyInclude,
   MediaWikiParserFunction,
+  MediaWikiReference,
   MediaWikiTemplate,
   MediaWikiText,
 } from "@mediawiki-typescript/builder";
@@ -63,7 +66,12 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
   }
 
   opaqueTag(ctx: { OpaqueTag: IToken[] }): Piece {
-    return { kind: "content", value: new MediaWikiText(ctx.OpaqueTag[0].image) };
+    const image = ctx.OpaqueTag[0].image;
+    const tagName = TAG_NAME_PATTERN.exec(image)?.[1]?.toLowerCase();
+    if (tagName === "gallery") {
+      return { kind: "content", value: parseGallery(image) };
+    }
+    return { kind: "content", value: new MediaWikiText(image) };
   }
 
   comment(ctx: { Comment: IToken[] }): Piece {
@@ -92,6 +100,10 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
           kind: "content",
           value: this.buildTemplate(afterColon, rest, { subst: true }),
         };
+      }
+      // {{DEFAULTSORT:key}} — overrides the page's category sort key, not a parser function.
+      if (beforeColon.toLowerCase() === "defaultsort") {
+        return { kind: "content", value: new MediaWikiDefaultSort(afterColon) };
       }
       const isParserFunction =
         beforeColon.startsWith("#") ||
@@ -180,6 +192,12 @@ export class WikitextToBuilderVisitor extends BaseVisitor {
       this.pieceFromEntry(key, element)
     );
     const children = selfClosing ? undefined : resolveQuotes(childPieces);
+
+    if (tagName.toLowerCase() === "ref") {
+      const { name, group } = attributes ?? {};
+      const options = name || group ? { name, group } : undefined;
+      return { kind: "content", value: new MediaWikiReference(children, options) };
+    }
 
     const TransclusionTag =
       TRANSCLUSION_TAG_BUILDERS[

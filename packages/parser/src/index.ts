@@ -1,16 +1,24 @@
-import { Block, parseTableBlock, ParsedTableCell, ParsedTableRow, splitBlocks } from "./blocks";
+import { Block, BehaviorSwitchWord, parseTableBlock, ParsedTableCell, ParsedTableRow, splitBlocks } from "./blocks";
 import { resolveInput, WikitextInput } from "./input";
 import { WikitextLexer } from "./lexer";
 import { wikitextParser } from "./parser";
 import { parseAttributes } from "./attributes";
 import { mergeDates, resolveQuotes, WikitextToBuilderVisitor, Piece } from "./visitor";
+import { parseGallery } from "./visitor/parseGallery";
 import {
   MediaWikiContent,
+  MediaWikiForceTOC,
   MediaWikiHeader,
   MediaWikiHiddenCategory,
+  MediaWikiIndex,
   MediaWikiListItem,
+  MediaWikiNoEditSection,
+  MediaWikiNoGallery,
+  MediaWikiNoIndex,
+  MediaWikiNoTOC,
   MediaWikiRedirect,
   MediaWikiSeparator,
+  MediaWikiStaticRedirect,
   MediaWikiTable,
   MediaWikiTableCellOptions,
   MediaWikiTableRow,
@@ -19,6 +27,17 @@ import {
   MediaWikiText,
   MediaWikiTOC,
 } from "@mediawiki-typescript/builder";
+
+// One MediaWikiContent subclass per Help:Magic_words#Behavior_switches word (beyond TOC/HIDDENCAT).
+const BEHAVIOR_SWITCH_BUILDERS: Record<BehaviorSwitchWord, new () => MediaWikiContent> = {
+  NOTOC: MediaWikiNoTOC,
+  FORCETOC: MediaWikiForceTOC,
+  NOEDITSECTION: MediaWikiNoEditSection,
+  NOGALLERY: MediaWikiNoGallery,
+  STATICREDIRECT: MediaWikiStaticRedirect,
+  INDEX: MediaWikiIndex,
+  NOINDEX: MediaWikiNoIndex,
+};
 
 const visitor = new WikitextToBuilderVisitor();
 
@@ -79,6 +98,8 @@ const blockToContent = (block: Block): MediaWikiContent[] => {
       return [new MediaWikiTOC()];
     case "hiddencat":
       return [new MediaWikiHiddenCategory()];
+    case "behaviorswitch":
+      return [new BEHAVIOR_SWITCH_BUILDERS[block.word]()];
     case "redirect":
       return [new MediaWikiRedirect(block.target)];
     case "list": {
@@ -104,6 +125,8 @@ const blockToContent = (block: Block): MediaWikiContent[] => {
         }),
       ];
     }
+    case "gallery":
+      return [parseGallery(block.content)];
     case "paragraph":
       return parseInlineText(block.content);
   }

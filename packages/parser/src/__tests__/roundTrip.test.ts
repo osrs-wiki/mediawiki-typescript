@@ -4,19 +4,29 @@ import {
   MediaWikiCategory,
   MediaWikiComment,
   MediaWikiDate,
+  MediaWikiDefaultSort,
   MediaWikiExternalLink,
   MediaWikiFile,
+  MediaWikiForceTOC,
+  MediaWikiGallery,
   MediaWikiHeader,
   MediaWikiHiddenCategory,
   MediaWikiHTML,
   MediaWikiIncludeOnly,
+  MediaWikiIndex,
   MediaWikiLink,
   MediaWikiListItem,
+  MediaWikiNoEditSection,
+  MediaWikiNoGallery,
   MediaWikiNoInclude,
+  MediaWikiNoIndex,
+  MediaWikiNoTOC,
   MediaWikiOnlyInclude,
   MediaWikiParserFunction,
   MediaWikiRedirect,
+  MediaWikiReference,
   MediaWikiSeparator,
+  MediaWikiStaticRedirect,
   MediaWikiTable,
   MediaWikiTemplate,
   MediaWikiText,
@@ -221,6 +231,47 @@ describe("parse - round trip of existing builder content types", () => {
     // parsed back — real MediaWiki itself requires <br/> for a manual line break (Help:Formatting).
     const result = await parse(new MediaWikiBreak().build());
     expect(result).toEqual([]);
+  });
+
+  test("MediaWikiDefaultSort", async () => {
+    const result = await parse(new MediaWikiDefaultSort("Smith, John").build());
+    expect(result).toEqual([new MediaWikiDefaultSort("Smith, John")]);
+  });
+
+  test.each([
+    ["MediaWikiNoTOC", MediaWikiNoTOC],
+    ["MediaWikiForceTOC", MediaWikiForceTOC],
+    ["MediaWikiNoEditSection", MediaWikiNoEditSection],
+    ["MediaWikiNoGallery", MediaWikiNoGallery],
+    ["MediaWikiStaticRedirect", MediaWikiStaticRedirect],
+    ["MediaWikiIndex", MediaWikiIndex],
+    ["MediaWikiNoIndex", MediaWikiNoIndex],
+  ] as const)("%s", async (_name, BehaviorSwitch) => {
+    const result = await parse(new BehaviorSwitch().build());
+    expect(result).toEqual([new BehaviorSwitch()]);
+  });
+
+  test("MediaWikiGallery", async () => {
+    const gallery = new MediaWikiGallery(
+      [{ file: "Example.jpg" }, { file: "Example2.jpg", caption: "A caption" }],
+      { mode: "packed", perrow: 4 }
+    );
+    const result = await parse(gallery.build());
+    expect(result).toEqual([gallery]);
+  });
+
+  test("MediaWikiReference", async () => {
+    const reference = new MediaWikiReference([new MediaWikiText("A citation.")], {
+      name: "test",
+    });
+    const result = await parse(reference.build());
+    expect(result).toEqual([reference]);
+  });
+
+  test("MediaWikiReference (self-closing)", async () => {
+    const reference = new MediaWikiReference(undefined, { name: "test" });
+    const result = await parse(reference.build());
+    expect(result).toEqual([reference]);
   });
 });
 
