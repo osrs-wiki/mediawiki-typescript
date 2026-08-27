@@ -30,8 +30,11 @@ export class BotPasswordAuth implements AuthStrategy {
 
   /** @inheritdoc */
   attach(axiosInstance: AxiosInstance): void {
-    wrapper(axiosInstance);
-    axiosInstance.defaults.jar = this.jar;
+    // Cast through `unknown`: axios-cookiejar-support's bundled axios types can structurally
+    // diverge from this package's resolved axios types depending on the TS host (full `tsc`
+    // vs. ts-jest's per-file checking), even with a single deduped axios install.
+    wrapper(axiosInstance as unknown as Parameters<typeof wrapper>[0]);
+    (axiosInstance.defaults as { jar?: CookieJar }).jar = this.jar;
     axiosInstance.defaults.withCredentials = true;
   }
 

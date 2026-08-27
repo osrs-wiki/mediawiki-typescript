@@ -52,10 +52,12 @@
 - [x] Unit tests (nock) per endpoint group + facade smoke tests — 17 suites / 48 tests total in the package.
 
 ### Phase 4 — Polish & release readiness
-- [ ] README with usage examples (instantiate client, registry `setWiki`, action + rest calls, both auth strategies).
-- [ ] Wire `apps/mw-cli` to a real command using the client (proves end-to-end usage + registry).
-- [ ] Changeset for `@mediawiki-typescript/api`.
-- [ ] Full root `turbo run build && turbo run lint && turbo run test`.
+- [x] README with usage examples (instantiate client, registry `setWiki`, action + rest calls, both auth strategies, content bridge, coverage summary).
+- [x] Wired `apps/mw-cli` to a real command (`mw-cli page get <title> --wiki <baseUrl>`, via `RestApiClient` + `MediaWikiClientRegistry`) proving end-to-end usage.
+- [x] Changeset for `@mediawiki-typescript/api` (`.changeset/api-package.md`; `changeset status` confirms it also bumps `mw-cli` as a dependent).
+- [x] Full root `turbo run build && turbo run lint && turbo run test` — 9/9 tasks pass.
+- [x] Carry-over: dedicated unit tests for `BotPasswordAuth`/`OAuthAuth` (login handshake success/failure, cookie jar attachment, OAuth1 request signing). Package is now at 19 test suites / 54 tests.
+- [ ] Carry-over: opt-in, env-gated integration tests against a public test wiki (Phase 2 step 14) — still not done; lowest-priority remaining item since the codegen/core/rest layers already have solid nock-mocked coverage.
 
 ## Architecture (reference)
 
