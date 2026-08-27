@@ -11,7 +11,16 @@ export type MediaWikiClientOptions = {
   auth?: AuthStrategy;
   /** Total seconds to retry a `maxlag`-throttled request before giving up. Default 5. */
   maxlagRetrySeconds?: number;
+  /**
+   * `User-Agent` header sent with every request. Wikimedia wikis reject requests without a
+   * descriptive one per their robot policy/API:Etiquette — override this with your own
+   * application's identifying details when targeting a Wikimedia-hosted wiki.
+   */
+  userAgent?: string;
 };
+
+/** Default `User-Agent` sent when {@link MediaWikiClientOptions.userAgent} isn't provided. */
+const DEFAULT_USER_AGENT = "mediawiki-typescript-api/0.0.0 (https://github.com/osrs-wiki/mediawiki-typescript)";
 
 /** Action API token type, as accepted by `meta=tokens&type=`. */
 export type TokenType = "csrf" | "login" | "createaccount" | "patrol" | "rollback" | "userrights" | "watch";
@@ -53,7 +62,10 @@ export class MediaWikiClient {
     this.baseUrl = options.baseUrl.replace(/\/+$/, "");
     this.auth = options.auth;
     this.maxlagRetrySeconds = options.maxlagRetrySeconds ?? 5;
-    this.axios = axios.create({ baseURL: `${this.baseUrl}/w/api.php` });
+    this.axios = axios.create({
+      baseURL: `${this.baseUrl}/w/api.php`,
+      headers: { "User-Agent": options.userAgent ?? DEFAULT_USER_AGENT },
+    });
     this.auth?.attach(this.axios);
   }
 
