@@ -15,11 +15,12 @@ jobs:
     name: "Changeset"
     needs: lint_build_test
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
 
     steps:
+      # A PAT (PUBLISH_PACKAGES) is required here, not the default GITHUB_TOKEN, since
+      # changeset-release/main is pushed with --force and this repo doesn't grant the
+      # default token write access — passed as checkout's `token:` (git auth) and reused
+      # below as `env.GITHUB_TOKEN` (GitHub API auth for the release PR).
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
