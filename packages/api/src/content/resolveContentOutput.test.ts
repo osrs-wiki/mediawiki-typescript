@@ -1,4 +1,4 @@
-import { MediaWikiText } from "@mediawiki-typescript/builder";
+import { MediaWikiContentList } from "@mediawiki-typescript/builder";
 import { resolveContentOutput } from "./resolveContentOutput";
 
 describe("resolveContentOutput", () => {
@@ -13,9 +13,9 @@ describe("resolveContentOutput", () => {
     await expect(resolveContentOutput(wikitext, rawResponse, "json")).resolves.toBe(rawResponse);
   });
 
-  test("\"contents\" parses the wikitext into MediaWikiContent[]", async () => {
+  test("\"contents\" parses the wikitext into a MediaWikiContentList", async () => {
     const result = await resolveContentOutput(wikitext, rawResponse, "contents");
-    expect(Array.isArray(result)).toBe(true);
-    expect((result as MediaWikiText[]).some((content) => content.build().includes("world"))).toBe(true);
+    expect(result).toBeInstanceOf(MediaWikiContentList);
+    expect(result.build().includes("world")).toBe(true);
   });
 });
