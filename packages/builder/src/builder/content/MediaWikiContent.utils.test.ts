@@ -1,5 +1,13 @@
 import MediaWikiContent from "./MediaWikiContent";
-import { buildContents } from "./MediaWikiContent.utils";
+import {
+  buildContents,
+  contentStartsWith,
+  findFirstStringContent,
+  flattenContents,
+  isContentEmpty,
+} from "./MediaWikiContent.utils";
+import { MediaWikiLink } from "./contents/MediaWikiLink/MediaWikiLink";
+import { MediaWikiText } from "./contents/MediaWikiText/MediaWikiText";
 
 class MediaWikiContentTest extends MediaWikiContent {
   build(): string {
@@ -90,3 +98,110 @@ describe("MediaWikiContent utils", () => {
     expect(buildContents(mixedArray as MediaWikiContent[])).toBe("testtest");
   });
 });
+
+describe("flattenContents", () => {
+  test("returns an empty array for a string", () => {
+    expect(flattenContents("test")).toEqual([]);
+  });
+
+  test("wraps a single MediaWikiContent in an array", () => {
+    const content = new MediaWikiContentTest();
+    expect(flattenContents(content)).toEqual([content]);
+  });
+
+  test("returns the array as-is (filtered) for an array input", () => {
+    const first = new MediaWikiContentTest();
+    const second = new MediaWikiContentTest();
+    expect(flattenContents([first, second])).toEqual([first, second]);
+  });
+
+  test("filters out nullish and non-content entries", () => {
+    const valid = new MediaWikiContentTest();
+    const invalid = { notABuildMethod: () => "nope" };
+    const mixed = [valid, null, undefined, invalid] as MediaWikiContent[];
+    expect(flattenContents(mixed)).toEqual([valid]);
+  });
+});
+
+describe("isContentEmpty", () => {
+  test("treats null/undefined as empty", () => {
+    expect(isContentEmpty(undefined)).toBe(true);
+  });
+
+  test("treats a whitespace-only string as empty", () => {
+    expect(isContentEmpty("   ")).toBe(true);
+    expect(isContentEmpty("text")).toBe(false);
+  });
+
+  test("treats an empty array as empty", () => {
+    expect(isContentEmpty([])).toBe(true);
+  });
+
+  test("treats an array of only-empty content as empty", () => {
+    expect(isContentEmpty([new MediaWikiText(""), new MediaWikiText("  ")])).toBe(true);
+    expect(isContentEmpty([new MediaWikiText(""), new MediaWikiText("text")])).toBe(false);
+  });
+
+  test("recurses into a MediaWikiContent's children", () => {
+    expect(isContentEmpty(new MediaWikiText(""))).toBe(true);
+    expect(isContentEmpty(new MediaWikiText("text"))).toBe(false);
+  });
+
+  test("falls back to build() output for content types with no .children (e.g. MediaWikiLink)", () => {
+    expect(isContentEmpty(new MediaWikiLink("Page"))).toBe(false);
+    expect(isContentEmpty(new MediaWikiText(new MediaWikiLink("Page")))).toBe(false);
+  });
+});
+
+describe("contentStartsWith", () => {
+  test("checks a raw string directly", () => {
+    expect(contentStartsWith("Hello world", "Hello")).toBe(true);
+  });
+
+  test("checks the first item of an array", () => {
+    expect(contentStartsWith([new MediaWikiText("Hello"), new MediaWikiText("world")], "Hello")).toBe(true);
+  });
+
+  test("skips leading empty items to find the first meaningful array item", () => {
+    expect(contentStartsWith([new MediaWikiText(""), new MediaWikiText("Hello")], "Hello")).toBe(true);
+  });
+
+  test("dives through nested MediaWikiContent children", () => {
+    const nested = new MediaWikiText(new MediaWikiText("Hello world"));
+    expect(contentStartsWith(nested, "Hello")).toBe(true);
+  });
+
+  test("falls back to build() output for content types with no .children (e.g. MediaWikiLink)", () => {
+    expect(contentStartsWith(new MediaWikiLink("Page"), "[[Page")).toBe(true);
+    expect(contentStartsWith(new MediaWikiText(new MediaWikiLink("Page")), "[[Page")).toBe(true);
+  });
+
+  test("returns false for empty content", () => {
+    expect(contentStartsWith(undefined, "Hello")).toBe(false);
+    expect(contentStartsWith([], "Hello")).toBe(false);
+  });
+});
+
+describe("findFirstStringContent", () => {
+  test("returns the content itself when its children is a string", () => {
+    const text = new MediaWikiText("Hello");
+    expect(findFirstStringContent(text)).toBe(text);
+  });
+
+  test("recurses through a single nested MediaWikiContent child", () => {
+    const inner = new MediaWikiText("Hello");
+    const outer = new MediaWikiText(inner);
+    expect(findFirstStringContent(outer)).toBe(inner);
+  });
+
+  test("recurses through the first item of an array child", () => {
+    const inner = new MediaWikiText("Hello");
+    const outer = new MediaWikiText([inner, new MediaWikiText("world")]);
+    expect(findFirstStringContent(outer)).toBe(inner);
+  });
+
+  test("returns undefined when no string content is found", () => {
+    expect(findFirstStringContent(new MediaWikiLink("Page"))).toBeUndefined();
+  });
+});
+
