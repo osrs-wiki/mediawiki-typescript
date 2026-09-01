@@ -1,5 +1,6 @@
+import { MediaWikiContentList } from "@mediawiki-typescript/builder";
 import { parse } from "@mediawiki-typescript/parser";
-import { ContentReturnFormat, ResolvedContent } from "./content.types";
+import type { ContentReturnFormat, ResolvedContent } from "./content.types";
 
 /**
  * Shapes an API response's wikitext content according to the caller-requested
@@ -9,7 +10,9 @@ import { ContentReturnFormat, ResolvedContent } from "./content.types";
  * - `"string"` — the raw wikitext, unchanged.
  * - `"json"` — the untouched raw API response object (the caller already has this; passed
  *   through as-is so all three formats can be requested from the same call site).
- * - `"contents"` — the wikitext parsed into `@mediawiki-typescript/builder` `MediaWikiContent[]`.
+ * - `"contents"` — the wikitext parsed and wrapped in a `MediaWikiContentList`, so every query
+ *   and mutation helper is available directly via dot notation (e.g. `result.findSection(...)`,
+ *   `result.insertInSection(...)`, `result.isEmpty()`, `result.trimBreaks()`).
  *
  * @param wikitext The extracted wikitext content to shape.
  * @param rawResponse The untouched raw API response, returned as-is for `"json"`.
@@ -25,7 +28,7 @@ export const resolveContentOutput = async <Format extends ContentReturnFormat>(
     case "json":
       return rawResponse as ResolvedContent<Format>;
     case "contents":
-      return (await parse(wikitext)) as ResolvedContent<Format>;
+      return new MediaWikiContentList(await parse(wikitext)) as ResolvedContent<Format>;
     case "string":
     default:
       return wikitext as ResolvedContent<Format>;

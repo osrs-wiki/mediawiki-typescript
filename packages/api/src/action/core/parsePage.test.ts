@@ -1,4 +1,5 @@
 import nock from "nock";
+import { MediaWikiContentList } from "@mediawiki-typescript/builder";
 import { MediaWikiClient } from "../../client/MediaWikiClient";
 import { parsePage } from "./parsePage";
 
@@ -19,7 +20,7 @@ describe("parsePage", () => {
     expect(result).toEqual({ title: "Sandbox", pageid: 1, content: "Hello '''world'''" });
   });
 
-  test("parses into MediaWikiContent[] when responseFormat is \"contents\"", async () => {
+  test("parses into a MediaWikiContentList when responseFormat is \"contents\"", async () => {
     nock(BASE_URL)
       .get("/w/api.php")
       .query(true)
@@ -28,6 +29,7 @@ describe("parsePage", () => {
     const client = new MediaWikiClient({ baseUrl: BASE_URL });
     const result = await parsePage(client, { page: "Sandbox", responseFormat: "contents" });
 
-    expect(Array.isArray(result.content)).toBe(true);
+    expect(result.content).toBeInstanceOf(MediaWikiContentList);
+    expect(result.content.build()).toContain("Hello world");
   });
 });
