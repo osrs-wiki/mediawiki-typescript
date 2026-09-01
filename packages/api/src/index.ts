@@ -3,13 +3,14 @@
  *
  * A typed client for the MediaWiki Action API and REST API. See docs/plans/api/plan.md for the
  * phased implementation plan. This barrel exposes the client/auth/versioning/content-bridge
- * foundation; the curated `action/core` Action API modules and `ActionApiClient` facade, and the
- * curated `rest` REST API modules and `RestApiClient` facade are re-exported once those layers
- * land. Generated per-module param types (`action/generated/*`) are not re-exported here to avoid
- * namespace bloat — import them from their specific paths.
+ * foundation plus the curated `action/core` Action API modules and the `ActionApiClient` facade;
+ * the curated `rest` REST API modules and `RestApiClient` facade are re-exported once that layer
+ * lands. Generated per-module param types (`action/generated/*`) are not re-exported here to
+ * avoid namespace bloat — import them from their specific paths.
  */
 export * from "./client";
 export * from "./auth";
 export * from "./versioning";
 export * from "./content";
 export * from "./errors";
+export * from "./action";
