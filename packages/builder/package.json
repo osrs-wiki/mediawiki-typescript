@@ -1,6 +1,6 @@
 {
   "name": "@mediawiki-typescript/builder",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A tool set for building MediaWiki content with TypeScript, specifically targeting the OSRS Wiki.",
   "license": "GPL-3.0",
   "main": "dist/index.js",
