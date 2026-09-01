@@ -1,6 +1,6 @@
 {
   "name": "@mediawiki-typescript/parser",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A wikitext parser for TypeScript that builds @mediawiki-typescript/builder content from raw wikitext.",
   "license": "GPL-3.0",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@mediawiki-typescript/builder": "0.0.0",
+    "@mediawiki-typescript/builder": "0.1.0",
     "chevrotain": "^13.2.0"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 {
   "name": "@mediawiki-typescript/api",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A typed client for the MediaWiki Action API and REST API, targeting the OSRS Wiki.",
   "license": "GPL-3.0",
   "main": "dist/index.js",
@@ -22,8 +22,8 @@
     "codegen": "tsx codegen/generate.ts"
   },
   "dependencies": {
-    "@mediawiki-typescript/builder": "0.0.0",
-    "@mediawiki-typescript/parser": "0.0.0",
+    "@mediawiki-typescript/builder": "0.1.0",
+    "@mediawiki-typescript/parser": "0.1.0",
     "axios": "^1.7.9",
     "axios-cookiejar-support": "^5.0.3",
     "oauth-1.0a": "^2.2.6",
