@@ -1,7 +1,7 @@
 {
   "name": "@mediawiki-typescript/api",
   "version": "0.0.0",
-  "description": "A typed client for the MediaWiki Action API and REST API, targeting the OSRS Wiki.",
+  "description": "A typed client for the MediaWiki Action API and REST API.",
   "license": "GPL-3.0",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

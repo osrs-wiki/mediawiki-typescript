@@ -8,14 +8,13 @@ This monorepo uses [Turborepo](https://turborepo.com/) to manage multiple packag
 
 ### Apps
 
-- **mw-cli**: MediaWiki command-line interface tool
+- **mw-cli** (`@mediawiki-typescript/mw-cli`): MediaWiki command-line interface tool.
 
 ### Packages
 
-- **api**: MediaWiki API client library
-- **builder**: Build tools for MediaWiki extensions
-- **parser**: MediaWiki wikitext parser
-- **tanstack-query**: TanStack Query integration for MediaWiki
+- **api** (`@mediawiki-typescript/api`): A typed axios-based client for the MediaWiki Action API (`api.php`) and REST API (`rest.php/v1`), with pluggable auth (bot passwords, OAuth) and content that bridges to/from `builder`/`parser`.
+- **builder** (`@mediawiki-typescript/builder`): A tool set for building MediaWiki content (wikitext) with TypeScript.
+- **parser** (`@mediawiki-typescript/parser`): A wikitext parser that parses raw wikitext into `@mediawiki-typescript/builder` content.
 
 ## Getting Started
 

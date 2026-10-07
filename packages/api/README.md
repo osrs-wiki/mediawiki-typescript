@@ -6,9 +6,6 @@ Integrates with [`@mediawiki-typescript/builder`](https://github.com/osrs-wiki/m
 [`@mediawiki-typescript/parser`](https://github.com/osrs-wiki/mediawiki-typescript/tree/main/packages/parser) so page content can be sent/received as either raw
 wikitext or structured `MediaWikiContents`.
 
-See [`docs/plans/api/plan.md`](https://github.com/osrs-wiki/mediawiki-typescript/blob/main/docs/plans/api/plan.md) for the full design/implementation
-plan and current status.
-
 ## Install
 
 ```sh
