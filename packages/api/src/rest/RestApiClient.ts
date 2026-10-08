@@ -38,7 +38,7 @@ export type RestApiRevisionFacade = {
 /**
  * Facade over `/rest.php/v1`, bound to one {@link MediaWikiClient}. Exposes `page`/`revision`
  * sub-facades for their respective endpoint groups, plus top-level methods for search, file
- * transforms, wikitext-to-HTML transforms, and page-history endpoints. See `docs/plans/api/plan.md`
+ * transforms, wikitext-to-HTML transforms, and page-history endpoints. See `packages/api/README.md`
  * Phase 3 for the endpoint list this covers.
  */
 export class RestApiClient {

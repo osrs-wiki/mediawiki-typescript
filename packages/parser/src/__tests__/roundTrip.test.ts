@@ -35,7 +35,7 @@ import {
 
 /**
  * `parse(new MediaWikiX(...).build())` should produce an object matching the original for every
- * existing builder content type — see docs/plans/builder-parser/plan.md for the two documented
+ * existing builder content type — see packages/parser/README.md for the two documented
  * exceptions (`MediaWikiBreak`, whose `"\n"` output is indistinguishable from ordinary whitespace,
  * and `MediaWikiText.styling.underline`, which round-trips to an equivalent `MediaWikiHTML` node
  * instead of the exact original type since `<u>` is also valid generic HTML).

@@ -5,7 +5,7 @@ applyTo: "packages/api/**"
 # `@mediawiki-typescript/api` instructions
 
 A typed axios-based client for the MediaWiki Action API (`api.php`) and REST API (`rest.php/v1`).
-See `docs/plans/api/plan.md` for the full phased implementation plan, decisions, and progress checklist — **keep that doc up to date** as phases land.
+See `packages/api/README.md` for the full design, usage, and coverage overview — **keep that doc up to date** as the package evolves.
 
 ## Package layout
 
@@ -35,4 +35,4 @@ See `docs/plans/api/plan.md` for the full phased implementation plan, decisions,
 - Opt-in integration tests against a public test wiki (e.g. test.wikipedia.org) are env-flag-gated and must never run by default in CI.
 - Run `npx tsc --noEmit`, `npx eslint src`, and `npx jest` in `packages/api` after any change, then the full root `npm run build && npm run lint && npm run test` (turbo) to confirm no cross-package regressions.
 
-See `docs/plans/api/plan.md` for the complete phase breakdown, open decisions, and rationale.
+See `packages/api/README.md` for the complete usage guide and coverage breakdown.

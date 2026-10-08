@@ -1,7 +1,7 @@
 /**
  * @mediawiki-typescript/api
  *
- * A typed client for the MediaWiki Action API and REST API. See docs/plans/api/plan.md for the
+ * A typed client for the MediaWiki Action API and REST API. See packages/api/README.md for the
  * phased implementation plan. This barrel exposes the client/auth/versioning/content-bridge
  * foundation plus the curated `action/core` Action API modules, the `ActionApiClient` facade,
  * the curated `rest` REST API modules, and the `RestApiClient` facade; generated per-module

@@ -64,4 +64,4 @@ wrapper. Conventions specific to this area:
 - No support for nested tables, `<col>`/`<colgroup>`/`<thead>`/`<tbody>`/`<tfoot>` (MediaWiki's own table syntax doesn't support these either), or deprecated HTML4 table attributes (`cellpadding`, `cellspacing`, `border=`, `width=` — use `style` instead, per Help:Tables itself).
 - Signatures (`~~~`/`~~~~`/`~~~~~`) have no static "build" representation and are not modeled as a content type.
 
-See `docs/plans/builder-parser/plan.md` for the full history and rationale behind these decisions.
+See `packages/builder/README.md` for the full list and rationale behind these decisions.

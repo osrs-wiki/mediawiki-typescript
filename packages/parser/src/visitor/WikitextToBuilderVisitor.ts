@@ -42,7 +42,7 @@ const BaseVisitor = wikitextParser.getBaseCstVisitorConstructor<never, unknown>(
 
 /**
  * Walks the inline wikitext CST and instantiates real `@mediawiki-typescript/builder` content
- * classes, rather than building a separate parser-owned AST — see docs/plans/builder-parser/plan.md.
+ * classes, rather than building a separate parser-owned AST — see packages/parser/README.md.
  */
 export class WikitextToBuilderVisitor extends BaseVisitor {
   constructor() {

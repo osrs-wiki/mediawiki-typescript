@@ -5,7 +5,7 @@ applyTo: "packages/parser/**"
 # `@mediawiki-typescript/parser` instructions
 
 Parses raw wikitext (string/file/stream/URL) into `@mediawiki-typescript/builder` `MediaWikiContents`.
-Fidelity goal is **best-effort semantic equivalence**, not a byte-for-byte lossless round trip — see `docs/plans/builder-parser/plan.md` for the documented exceptions.
+Fidelity goal is **best-effort semantic equivalence**, not a byte-for-byte lossless round trip — see `packages/parser/README.md` for the documented exceptions.
 
 ## Pipeline / package layout
 
@@ -44,8 +44,8 @@ Other key files:
 ## Known, deliberate gaps (do not "fix" without discussion)
 
 - No nested table support (`{|`/`|}` inside a cell) in `parseTable.ts`.
-- `MediaWikiBreak` and `MediaWikiText.styling.underline` don't round-trip to their exact original type (see `docs/plans/builder-parser/plan.md` for why).
+- `MediaWikiBreak` and `MediaWikiText.styling.underline` don't round-trip to their exact original type (see `packages/parser/README.md` for why).
 - Space-indented "preformatted text" blocks (Help:Formatting) have no corresponding builder type and are not parsed as such; literal `<pre>` tags are already supported as opaque HTML.
 - Signatures (`~~~`, `~~~~`, `~~~~~`) are left as plain literal text.
 
-See `docs/plans/builder-parser/plan.md` for the full history, rationale, and the complete list of out-of-scope items.
+See `packages/parser/README.md` for the full list, rationale, and complete out-of-scope items.
