@@ -1,6 +1,6 @@
 {
   "name": "@mediawiki-typescript/mw-cli",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "GPL-3.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -20,9 +20,9 @@
     "test": "echo \"No tests yet\""
   },
   "dependencies": {
-    "@mediawiki-typescript/api": "0.0.0",
-    "@mediawiki-typescript/builder": "0.0.0",
-    "@mediawiki-typescript/parser": "0.0.0",
+    "@mediawiki-typescript/api": "0.1.0",
+    "@mediawiki-typescript/builder": "0.1.0",
+    "@mediawiki-typescript/parser": "0.1.0",
     "@mediawiki-typescript/tanstack-query": "0.0.0"
   },
   "devDependencies": {
