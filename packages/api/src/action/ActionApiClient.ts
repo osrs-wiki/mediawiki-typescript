@@ -40,7 +40,7 @@ export type ActionApiQueryFacade = {
  * For anything outside this curated set (270+ other generated modules), call
  * `client.call(action, params)` directly using the matching generated `*Params` type from
  * `action/generated/` \u2014 that's the documented "100% request coverage, curated response coverage"
- * boundary for this package (see `docs/plans/api/plan.md`).
+ * boundary for this package (see `packages/api/README.md`'s Coverage section).
  */
 export class ActionApiClient {
   /** The curated `query`/list helpers; see {@link ActionApiQueryFacade}. */

@@ -90,7 +90,7 @@ The top-level entry point:
 | Type | Wikitext |
 | --- | --- |
 | `MediaWikiTemplate` | `{{Name\|param=value}}`, with auto single-line/multi-line collapsing |
-| `MediaWikiTable` | Full [Help:Tables](https://www.mediawiki.org/wiki/Help:Tables) support — rows, header cells, colspan/rowspan, per-cell/row/table attributes |
+| `MediaWikiTable` | [Help:Tables](https://www.mediawiki.org/wiki/Help:Tables) support (rows, header cells, colspan/rowspan, per-cell/row/table attributes) — see Known gaps below for exclusions |
 | `MediaWikiListItem` | Ordered/unordered/definition list items |
 | `MediaWikiIndex` | `__INDEX__` |
 

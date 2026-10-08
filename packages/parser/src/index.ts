@@ -145,7 +145,7 @@ const blockToContent = (block: Block): MediaWikiContent[] => {
  * `MediaWikiContents`, ready to be re-built, inspected, or transformed programmatically.
  *
  * Fidelity goal is best-effort semantic equivalence, not a byte-for-byte lossless round-trip —
- * see docs/plans/builder-parser/plan.md for known gaps and simplifications.
+ * see packages/parser/README.md for known gaps and simplifications.
  */
 export const parse = async (input: WikitextInput): Promise<MediaWikiContent[]> => {
   const text = await resolveInput(input);
